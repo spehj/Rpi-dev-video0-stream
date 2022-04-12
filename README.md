@@ -10,7 +10,7 @@ v4l2-ctl --set-fmt-video=width=640,height=480,pixelformat=2
 Check for your screen size and bit depth using:
 http://raspberrycompote.blogspot.si/2012/12/low-level-graphics-on-raspberry-pi-part_9509.html
 
-Then edit pr2.c and pr3.c defines.
+Then edit pr3.c defines (HEIGHT_E and WIDTH_E).
 
 Compile each .c program with:
 ```console
