@@ -12,12 +12,12 @@ Program reads image from /dev/video0 and saves it to /dev/fb0.
 
 */
 
-#define height_e 1080
-#define width_e 1920
-#define height_c 480
-#define width_c 640
-#define depth 2 // 2 bytes
-#define NPOD height_c *width_c *depth
+#define HEIGHT_E 1080
+#define WIDTH_E 1920
+#define HEIGHT_C 480
+#define WIDTH_C 640
+#define DEPTH 2 // 2 bytes
+#define NPOD HEIGHT_C *WIDTH_C *DEPTH
 
 int main(int argc, char *argv[])
 {
@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
     pom = malloc(n_pod);
 
     unsigned short *screen;                           // Pointer to memory of screen image
-    ssize_t screen_size = width_e * height_e * depth; // depth = 16bpp/8bitov=2
+    ssize_t screen_size = WIDTH_E * HEIGHT_E * DEPTH; // depth = 16bpp/8bitov=2
     // Allocate memory for screen image
     screen = malloc(screen_size);
 
@@ -63,12 +63,12 @@ int main(int argc, char *argv[])
         p_pod = read(fi, pom, n_pod);
         lseek(fi, 0, SEEK_SET);
         // rows
-        for (int i = 0; i < height_c; i++)
+        for (int i = 0; i < HEIGHT_C; i++)
         {
             // columns
-            for (int j = 0; j < width_c; j++)
+            for (int j = 0; j < WIDTH_C; j++)
             {
-                screen[i * width_e + j] = pom[i * width_c + j];
+                screen[i * WIDTH_E + j] = pom[i * WIDTH_C + j];
             }
         }
 
