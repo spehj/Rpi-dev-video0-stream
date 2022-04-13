@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
     while (1)
     {
         // Read data from raw image
-        for (int k = 0; k < n_pod; k = k + row_e)
+        for (int k = 0; k < 640*2; k = k + row_e)
         {
             p_pod = read(fi, &pom[k], row_e);
             if (p_pod == -1)

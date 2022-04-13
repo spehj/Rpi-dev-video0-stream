@@ -101,7 +101,7 @@ int main(int argc, char *argv[])
                 // printf("Izhod: %x\n", rgb565);
                 j++;
             }
-            w_pod = write(fo, &izhodna, row_e);
+            w_pod = write(fo, izhodna, row_e);
             if (w_pod != row_e)
             {
                 printf("%s: Napaka write %s\n", argv[0], argv[2]);
