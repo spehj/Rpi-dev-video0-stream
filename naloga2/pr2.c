@@ -25,8 +25,8 @@ int main(int argc, char *argv[])
     char *vhod = VFIFO;
     char *izhod = IFIFO; // mogoce char?
 
-    mkfifo(vhod, 0666);
-    mkfifo(izhod, 0666);
+    // mkfifo(vhod, 0666);
+    // mkfifo(izhod, 0666);
 
     printf("\nProgram 2_2\n\n");
     fi = open(vhod, O_RDONLY);

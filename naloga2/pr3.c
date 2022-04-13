@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
     char *vhod = IFIFO;
     char izhod[] = "/dev/fb0";
 
-    mkfifo(vhod, 0666);
+    //mkfifo(vhod, 0666);
 
     printf("\nProgram 2_3\n\n");
 

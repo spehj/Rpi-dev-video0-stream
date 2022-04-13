@@ -33,6 +33,7 @@ int main(int argc, char *argv[])
     char vhod[] = "/dev/video0";
     char *izhod = VFIFO;
     mkfifo(izhod, 0666);
+    mkfifo(vhod, 0666);
     printf("\nProgram 2_1\n\n");
 
     fi = open(vhod, O_RDONLY);
