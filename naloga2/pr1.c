@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 
     char vhod[] = "/dev/video0";
     char *izhod = VFIFO;
-    
+
     char *fifo1 = VFIFO; // Prvi izhod se imenuje fifo vhod
     char *fifo2 = IFIFO; // Drugi izhod se imenuje fifo izhod
     mkfifo(fifo1, 0666);
@@ -58,12 +58,19 @@ int main(int argc, char *argv[])
     // Allocate memory for bytes
     pom = malloc(n_pod);
 
+    int im_part = WIDTH_C*DEPTH_C;
+    char *image;
+    image = malloc(im_part);
     /* Image stream */
     while (1)
     {
         p_pod = read(fi, pom, n_pod);
         lseek(fi, 0, SEEK_SET);
-        w_pod = write(fo, pom, p_pod);
+        
+        for (int i=0; i<p_pod; i = i+ im_part){
+            w_pod = write(fo, &pom[i], im_part);
+        }
+        //w_pod = write(fo, pom, p_pod);
         // lseek(fo, 0, SEEK_SET);
 
         if (p_pod == -1)
@@ -71,7 +78,9 @@ int main(int argc, char *argv[])
             printf("%s: Error read %s\n", argv[0], argv[1]);
             exit(4);
         }
-        if (w_pod != p_pod)
+
+        //if (w_pod != p_pod)
+        if (w_pod != im_part)
         {
             printf("%s: Error write %s\n", argv[0], argv[2]);
             exit(5);

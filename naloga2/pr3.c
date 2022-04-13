@@ -17,6 +17,7 @@ Program reads image from FIFO and saves it to /dev/fb0.
 #define HEIGHT_C 480
 #define WIDTH_C 640
 #define DEPTH 2 // 2 bytes
+#define DEPTH_E 2
 #define NPOD HEIGHT_C *WIDTH_C *DEPTH
 #define VFIFO "/tmp/vhod"
 #define IFIFO "/tmp/izhod"
@@ -34,13 +35,14 @@ int main(int argc, char *argv[])
     char *vhod = IFIFO;
     char izhod[] = "/dev/fb0";
 
-    //mkfifo(vhod, 0666);
+    // mkfifo(vhod, 0666);
 
     printf("\nProgram 2_3\n\n");
 
     // fo = open(izhod, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-    fo = open(izhod, O_WRONLY);
     fi = open(vhod, O_RDONLY);
+    fo = open(izhod, O_WRONLY);
+    
     if (fi == -1)
     {
         printf("Napaka open input file. %s\n", argv[0]);
@@ -60,11 +62,15 @@ int main(int argc, char *argv[])
     ssize_t screen_size = WIDTH_E * HEIGHT_E * DEPTH; // depth = 16bpp/8bitov=2
     // Allocate memory for screen image
     screen = malloc(screen_size);
-
+    unsigned int row_e = WIDTH_C*DEPTH_E;
+    unsigned int im_e = WIDTH_C*HEIGHT_C*DEPTH_E;
     while (1)
     {
         // Read data from raw image
-        p_pod = read(fi, pom, n_pod);
+        for (int k = 0; k < im_e; k = k+ row_e)
+        {
+            p_pod = read(fi, &pom[k], row_e);
+        }
         // lseek(fi, 0, SEEK_SET);
         //  rows
         for (int i = 0; i < HEIGHT_C; i++)
@@ -88,7 +94,7 @@ int main(int argc, char *argv[])
             printf("%s: Napaka write %s\n", argv[0], argv[2]);
             exit(5);
         }
-        //sleep(1);
+        // sleep(1);
     }
 
     return 0;

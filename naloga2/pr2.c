@@ -6,6 +6,10 @@
 #include <fcntl.h>
 #include <malloc.h>
 
+#define HEIGHT_C 480
+#define WIDTH_C 640
+#define DEPTH_C 3
+#define DEPTH_E 2
 #define VFIFO "/tmp/vhod"
 #define IFIFO "/tmp/izhod"
 /*
@@ -30,7 +34,7 @@ int main(int argc, char *argv[])
 
     printf("\nProgram 2_2\n\n");
     fi = open(vhod, O_RDONLY);
-    //fo = open(izhod, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    // fo = open(izhod, O_WRONLY | O_CREAT | O_TRUNC, 0644);
     fo = open(izhod, O_WRONLY);
 
     if (fi == -1)
@@ -50,7 +54,12 @@ int main(int argc, char *argv[])
     ssize_t resized_size = 640 * 480 * 2;
     unsigned short rgb565;
     char *pom;
+    unsigned short *image;
     unsigned short izhodna[resized_size];
+    int im_part = WIDTH_C * DEPTH_C;
+    unsigned int row = WIDTH_C * HEIGHT_C * DEPTH_C;
+    unsigned int row_e = WIDTH_C*DEPTH_E;
+    unsigned int im_e = WIDTH_C*HEIGHT_C*DEPTH_E;
 
     pom = malloc(original_size);
 
@@ -67,38 +76,46 @@ int main(int argc, char *argv[])
             printf("Napaka open output file. %s\n", argv[0]);
             exit(3);
         }
-        p_pod = read(fi, pom, original_size);
-
-        int j = 0;
-        for (int i = 0; i < p_pod; i = i + 3)
+        
+        // Beremo po 1 vrstico
+        for (int k = 0; k < row; k = k + im_part)
         {
-            red = pom[i];
-            green = pom[i + 1];
-            blue = pom[i + 2];
+            p_pod = read(fi, &pom[k], im_part);
 
-            rgb565 = ((red >> 3) << 11) | ((green >> 2) << 5) | (blue >> 3);
-            izhodna[j] = rgb565;
-            j++;
-
-            if (p_pod == -1)
+            // p_pod = read(fi, pom, original_size);
+            int j = 0;
+            for (int i = 0; i < p_pod; i = i + 3)
             {
-                printf("%s: Napaka read %s\n", argv[0], argv[1]);
-                exit(4);
+                red = pom[i];
+                green = pom[i + 1];
+                blue = pom[i + 2];
+
+                rgb565 = ((red >> 3) << 11) | ((green >> 2) << 5) | (blue >> 3);
+                izhodna[j] = rgb565;
+                j++;
+
+                if (p_pod == -1)
+                {
+                    printf("%s: Napaka read %s\n", argv[0], argv[1]);
+                    exit(4);
+                }
             }
+            w_pod = write(fo, izhodna, row_e);
         }
 
-        w_pod = write(fo, izhodna, resized_size);
-
+        // for (int n = 0; n < row_e; n = n + im_e)
+        // {
+        //     w_pod = write(fo, izhodna, im_e);
+        // }
         // lseek(fi, 0, SEEK_SET);
         // lseek(fo, 0, SEEK_SET);
 
-        if (w_pod != resized_size)
+        if (w_pod != row_e)
         {
             printf("%s: Napaka write %s\n", argv[0], argv[2]);
             exit(5);
         }
-        //sleep(1);
-        
+        // sleep(1);
     }
 
     return 0;
