@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
 
     char *vhod = VFIFO;
     char *izhod = IFIFO; // mogoce char?
-    
+
     mkfifo(vhod, 0666);
     mkfifo(izhod, 0666);
 
@@ -56,10 +56,6 @@ int main(int argc, char *argv[])
 
     while (1)
     {
-        // fi = open(vhod, O_RDONLY);
-        // // fo = open(izhod, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-        // fo = open(izhod, O_WRONLY);
-
         if (fi == -1)
         {
             printf("Napaka open input file. %s\n", argv[0]);
@@ -102,8 +98,7 @@ int main(int argc, char *argv[])
             exit(5);
         }
         //sleep(1);
-        // close(fi);
-        // close(fo);
+        
     }
 
     return 0;

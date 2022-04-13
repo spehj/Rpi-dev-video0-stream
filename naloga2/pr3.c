@@ -63,12 +63,6 @@ int main(int argc, char *argv[])
 
     while (1)
     {
-        // fi = open(vhod, O_RDONLY);
-        // if (fi == -1)
-        // {
-        //     printf("Napaka open input file. %s\n", argv[0]);
-        //     exit(2);
-        // }
         // Read data from raw image
         p_pod = read(fi, pom, n_pod);
         // lseek(fi, 0, SEEK_SET);
@@ -95,7 +89,6 @@ int main(int argc, char *argv[])
             exit(5);
         }
         //sleep(1);
-        //close(fi);
     }
 
     return 0;

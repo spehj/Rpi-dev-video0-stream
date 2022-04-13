@@ -57,13 +57,6 @@ int main(int argc, char *argv[])
     /* Image stream */
     while (1)
     {
-        // fo = open(izhod, O_WRONLY);
-        // if (fo == -1)
-        // {
-        //     printf("Error open output file. %s\n", argv[0]);
-        //     exit(3);
-        // }
-
         p_pod = read(fi, pom, n_pod);
         lseek(fi, 0, SEEK_SET);
         w_pod = write(fo, pom, p_pod);
@@ -80,7 +73,7 @@ int main(int argc, char *argv[])
             exit(5);
         }
         //sleep(1);
-        //close(fo);
+        
     }
     /* END stream */
 
