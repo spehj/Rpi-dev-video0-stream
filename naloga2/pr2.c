@@ -58,8 +58,8 @@ int main(int argc, char *argv[])
     unsigned short izhodna[resized_size];
     int im_part = WIDTH_C * DEPTH_C;
     unsigned int row = WIDTH_C * HEIGHT_C * DEPTH_C;
-    unsigned int row_e = WIDTH_C*DEPTH_E;
-    unsigned int im_e = WIDTH_C*HEIGHT_C*DEPTH_E;
+    unsigned int row_e = WIDTH_C * DEPTH_E;
+    unsigned int im_e = WIDTH_C * HEIGHT_C * DEPTH_E;
 
     pom = malloc(original_size);
 
@@ -76,11 +76,16 @@ int main(int argc, char *argv[])
             printf("Napaka open output file. %s\n", argv[0]);
             exit(3);
         }
-        
+
         // Beremo po 1 vrstico
         for (int k = 0; k < row; k = k + im_part)
         {
             p_pod = read(fi, &pom[k], im_part);
+            if (p_pod == -1)
+            {
+                printf("%s: Napaka read %s\n", argv[0], argv[1]);
+                exit(4);
+            }
 
             // p_pod = read(fi, pom, original_size);
             int j = 0;
@@ -92,21 +97,16 @@ int main(int argc, char *argv[])
 
                 rgb565 = ((red >> 3) << 11) | ((green >> 2) << 5) | (blue >> 3);
                 izhodna[j] = rgb565;
+                //printf("Izhod: %x\n", rgb565);
                 j++;
-
-                if (p_pod == -1)
-                {
-                    printf("%s: Napaka read %s\n", argv[0], argv[1]);
-                    exit(4);
-                }
             }
-            w_pod = write(fo, izhodna, row_e);
+            //w_pod = write(fo, izhodna, row_e);
         }
 
-        // for (int n = 0; n < row_e; n = n + im_e)
-        // {
-        //     w_pod = write(fo, izhodna, im_e);
-        // }
+        for (int n = 0; n < im_e; n = n + row_e)
+        {
+            w_pod = write(fo, &izhodna[n], row_e);
+        }
         // lseek(fi, 0, SEEK_SET);
         // lseek(fo, 0, SEEK_SET);
 

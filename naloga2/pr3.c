@@ -41,8 +41,8 @@ int main(int argc, char *argv[])
 
     // fo = open(izhod, O_WRONLY | O_CREAT | O_TRUNC, 0644);
     fi = open(vhod, O_RDONLY);
-    fo = open(izhod, O_WRONLY);
-    
+    fo = creat(izhod, 0666);
+
     if (fi == -1)
     {
         printf("Napaka open input file. %s\n", argv[0]);
@@ -62,14 +62,19 @@ int main(int argc, char *argv[])
     ssize_t screen_size = WIDTH_E * HEIGHT_E * DEPTH; // depth = 16bpp/8bitov=2
     // Allocate memory for screen image
     screen = malloc(screen_size);
-    unsigned int row_e = WIDTH_C*DEPTH_E;
-    unsigned int im_e = WIDTH_C*HEIGHT_C*DEPTH_E;
+    unsigned int row_e = WIDTH_C * DEPTH_E;
+    unsigned int im_e = WIDTH_C * HEIGHT_C * DEPTH_E;
     while (1)
     {
         // Read data from raw image
-        for (int k = 0; k < im_e; k = k+ row_e)
+        for (int k = 0; k < n_pod; k = k + row_e)
         {
             p_pod = read(fi, &pom[k], row_e);
+            if (p_pod == -1)
+            {
+                printf("%s: Napaka read %s\n", argv[0], argv[1]);
+                exit(4);
+            }
         }
         // lseek(fi, 0, SEEK_SET);
         //  rows
@@ -84,11 +89,7 @@ int main(int argc, char *argv[])
 
         w_pod = write(fo, screen, screen_size);
         lseek(fo, 0, SEEK_SET);
-        if (p_pod == -1)
-        {
-            printf("%s: Napaka read %s\n", argv[0], argv[1]);
-            exit(4);
-        }
+
         if (w_pod != screen_size)
         {
             printf("%s: Napaka write %s\n", argv[0], argv[2]);
