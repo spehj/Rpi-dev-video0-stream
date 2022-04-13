@@ -40,5 +40,29 @@ naloga1/pr3
 naloga1/vhod.raw
 naloga1/izhod.raw
 
+/naloga2/pr1
+/naloga2/pr2
+/naloga2/pr3
+/naloga2/vhod.raw
+/naloga2/izhod.raw
+
+naloga2/pr1
+naloga2/pr2
+naloga2/pr3
+naloga2/vhod
+naloga2/izhod
+
+/naloga3/pr1
+/naloga3/pr2
+/naloga3/pr3
+/naloga3/vhod
+/naloga3/izhod
+
+naloga3/pr1
+naloga3/pr2
+naloga3/pr3
+naloga3/vhod.raw
+naloga3/izhod.raw
+
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode
