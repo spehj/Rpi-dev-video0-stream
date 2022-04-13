@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
 
     // Allocate memory for bytes
     pom = malloc(n_pod);
-    
+
     /* Image stream */
     while (1)
     {
@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
         // }
 
         p_pod = read(fi, pom, n_pod);
-        ///lseek(fi, 0, SEEK_SET);
+        lseek(fi, 0, SEEK_SET);
         w_pod = write(fo, pom, p_pod);
         // lseek(fo, 0, SEEK_SET);
 
