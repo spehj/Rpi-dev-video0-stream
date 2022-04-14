@@ -62,8 +62,8 @@ int main(int argc, char *argv[])
     while (1)
     {
         p_pod = read(fi, pom, n_pod);
-        lseek(fi, 0, SEEK_SET);
-        w_pod = write(fo, pom, p_pod);
+        //lseek(fi, 0, SEEK_SET);
+        w_pod = write(fo, pom, n_pod);
         // lseek(fo, 0, SEEK_SET);
 
         if (p_pod == -1)

@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
     ssize_t w_pod;
 
     char *vhod = VFIFO;
-    char *izhod = IFIFO; // mogoce char?
+    char *izhod = IFIFO; 
 
     // mkfifo(vhod, 0666);
     // mkfifo(izhod, 0666);
@@ -45,17 +45,19 @@ int main(int argc, char *argv[])
         exit(3);
     }
 
-    char red, green, blue;
+    unsigned char red, green, blue;
     ssize_t original_size = 640 * 480 * 3;
     ssize_t resized_size = 640 * 480 * 2;
     unsigned short rgb565;
-    char *pom;
+    unsigned char *pom;
     unsigned short izhodna[resized_size];
 
     pom = malloc(original_size);
 
+    unsigned char pom2[original_size];
+    unsigned int counter = 0;
     while (1)
-    {
+    {   //printf("unsigned short: %d\n", sizeof(unsigned short));
         if (fi == -1)
         {
             printf("Napaka open input file. %s\n", argv[0]);
@@ -67,10 +69,14 @@ int main(int argc, char *argv[])
             printf("Napaka open output file. %s\n", argv[0]);
             exit(3);
         }
-        p_pod = read(fi, pom, original_size);
+        p_pod = read(fi, pom+counter, original_size);
+        counter +=p_pod;
 
+        if (counter == original_size){
+            counter = 0;
+        }
         int j = 0;
-        for (int i = 0; i < p_pod; i = i + 3)
+        for (int i = 0; i < original_size; i = i + 3)
         {
             red = pom[i];
             green = pom[i + 1];
@@ -78,23 +84,26 @@ int main(int argc, char *argv[])
 
             rgb565 = ((red >> 3) << 11) | ((green >> 2) << 5) | (blue >> 3);
             izhodna[j] = rgb565;
+            // printf("Izhodna: %d\n", sizeof(izhodna[j]));
+            // printf("RGB565: %d\n", sizeof(rgb565));
             j++;
 
             if (p_pod == -1)
             {
-                printf("%s: Napaka read %s\n", argv[0], argv[1]);
+                printf("%s: Napaka read %s\n", argv[0]);
                 exit(4);
             }
         }
 
+        
         w_pod = write(fo, izhodna, resized_size);
-
+        //printf("Size of izhodna: %d\n", w_pod);
         // lseek(fi, 0, SEEK_SET);
         // lseek(fo, 0, SEEK_SET);
 
         if (w_pod != resized_size)
         {
-            printf("%s: Napaka write %s\n", argv[0], argv[2]);
+            printf("%s: Napaka write %s\n", argv[0]);
             exit(5);
         }
         //sleep(1);
