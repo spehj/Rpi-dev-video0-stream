@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 
     char vhod[] = "/dev/video0";
     char *izhod = VFIFO;
-    
+
     char *fifo1 = VFIFO; // Prvi izhod se imenuje fifo vhod
     char *fifo2 = IFIFO; // Drugi izhod se imenuje fifo izhod
     mkfifo(fifo1, 0666);
@@ -40,8 +40,6 @@ int main(int argc, char *argv[])
     printf("\nProgram 2_1\n\n");
 
     fi = open(vhod, O_RDONLY);
-    // fo = open(izhod, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-    // fo = open(izhod, O_WRONLY);
 
     if (fi == -1)
     {
@@ -54,30 +52,35 @@ int main(int argc, char *argv[])
         printf("Error open output file. %s\n", argv[0]);
         exit(3);
     }
-
+    ssize_t vrstica = 640 * 3;
     // Allocate memory for bytes
-    pom = malloc(n_pod);
-
+    pom = malloc(vrstica);
+    unsigned int counter = 0;
     /* Image stream */
     while (1)
     {
-        p_pod = read(fi, pom, n_pod);
-        //lseek(fi, 0, SEEK_SET);
-        w_pod = write(fo, pom, n_pod);
-        // lseek(fo, 0, SEEK_SET);
+        p_pod = read(fi, pom, vrstica);
+        counter += vrstica;
+
+        if (counter == n_pod)
+        {
+            counter = 0;
+        }
+
+        lseek(fi, counter, SEEK_SET);
+        w_pod = write(fo, pom, vrstica);
 
         if (p_pod == -1)
         {
             printf("%s: Error read %s\n", argv[0], argv[1]);
             exit(4);
         }
-        if (w_pod != p_pod)
+
+        if (w_pod != vrstica)
         {
             printf("%s: Error write %s\n", argv[0], argv[2]);
             exit(5);
         }
-        //sleep(1);
-        
     }
     /* END stream */
 
