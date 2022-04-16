@@ -5,6 +5,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <malloc.h>
+#include <string.h>
 
 /*
 
@@ -12,8 +13,8 @@ Program reads image from FIFO and saves it to /dev/fb0.
 
 */
 
-#define HEIGHT_E 1024
-#define WIDTH_E 1280
+#define HEIGHT_E 1080
+#define WIDTH_E 1920
 #define HEIGHT_C 480
 #define WIDTH_C 640
 #define DEPTH 2 // 2 bytes
@@ -25,16 +26,14 @@ int main(int argc, char *argv[])
 {
     unsigned short *pom; // Allocate memory for raw image
     int fi, fo;
-    ssize_t n_pod; // How many bytes we will read from raw image
     ssize_t p_pod; // How many bytes we read from raw image
     ssize_t w_pod; // How many bytes we will write
-
-    n_pod = NPOD; //(640x480x2)
+    ssize_t c_pod;
 
     char *vhod = IFIFO;
     char izhod[] = "/dev/fb0";
 
-    //mkfifo(vhod, 0666);
+    // mkfifo(vhod, 0666);
 
     printf("\nProgram 2_3\n\n");
 
@@ -52,49 +51,53 @@ int main(int argc, char *argv[])
         printf("Napaka open output file. %s\n", argv[0]);
         exit(3);
     }
-
+    ssize_t vrstica = 640 * 2;
     // Allocate memory for data from raw file
-    pom = malloc(n_pod);
+    pom = malloc(vrstica);
 
     unsigned short *screen;                           // Pointer to memory of screen image
-    //char *screen;
     ssize_t screen_size = WIDTH_E * HEIGHT_E * DEPTH; // depth = 16bpp/8bitov=2
     // Allocate memory for screen image
     screen = malloc(screen_size);
-    unsigned counter  = 0;
+    unsigned int counter = 0;
+    unsigned int premik = 2 * WIDTH_E - vrstica;
+
+    // Clean screen writing zeros to all the pixels
+    memset(screen, 0, WIDTH_E * HEIGHT_E * sizeof(short));
+    c_pod = write(fo, screen, screen_size);
+    if (c_pod != screen_size)
+    {
+        printf("%s: Napaka write %s\n", argv[0]);
+        exit(6);
+    }
+    lseek(fo, 0, SEEK_SET);
     while (1)
     {
-        // Read data from raw image
-        p_pod = read(fi, pom+counter/2, n_pod);
-        counter +=p_pod;
-
-        if (counter == n_pod){
+        // Read rows
+        p_pod = read(fi, pom, vrstica);
+        // Write rows on the screen
+        w_pod = write(fo, pom, vrstica);
+        // Count rows written
+        counter += 1;
+        // Skip pixels on the screen to write next row
+        lseek(fo, premik, SEEK_CUR);
+        // When image is written start writing from zero
+        if (counter >= HEIGHT_C)
+        {
+            lseek(fo, 0, SEEK_SET);
             counter = 0;
         }
-        // lseek(fi, 0, SEEK_SET);
-        //  rows
-        for (int i = 0; i < HEIGHT_C; i++)
-        {
-            // columns
-            for (int j = 0; j < WIDTH_C; j++)
-            {
-                screen[i * WIDTH_E + j] = pom[i * WIDTH_C + j];
-            }
-        }
 
-        w_pod = write(fo, screen, screen_size);
-        lseek(fo, 0, SEEK_SET);
         if (p_pod == -1)
         {
             printf("%s: Napaka read %s\n", argv[0]);
             exit(4);
         }
-        if (w_pod != screen_size)
+        if (w_pod != vrstica)
         {
             printf("%s: Napaka write %s\n", argv[0]);
             exit(5);
         }
-        //sleep(1);
     }
 
     return 0;
