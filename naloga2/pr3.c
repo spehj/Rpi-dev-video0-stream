@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
     unsigned int counter = 0;
     unsigned int premik = 2 * WIDTH_E - vrstica;
 
-    // Clean screen writing zeros to all the pixels
+    // Clear screen writing zeros to all the pixels
     memset(screen, 0, WIDTH_E * HEIGHT_E * sizeof(short));
     c_pod = write(fo, screen, screen_size);
     if (c_pod != screen_size)
