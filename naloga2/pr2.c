@@ -56,18 +56,6 @@ int main(int argc, char *argv[])
 
     while (1)
     {
-        if (fi == -1)
-        {
-            printf("Napaka open input file. %s\n", argv[0]);
-            exit(2);
-        }
-
-        if (fo == -1)
-        {
-            printf("Napaka open output file. %s\n", argv[0]);
-            exit(3);
-        }
-
         p_pod = read(fi, pom, vrstica);
         if (p_pod == -1)
         {
