@@ -12,8 +12,8 @@ Program reads image from /dev/video0 and saves it to /dev/fb0.
 
 */
 
-#define HEIGHT_E 1024
-#define WIDTH_E 1280
+#define HEIGHT_E 1080
+#define WIDTH_E 1920
 #define HEIGHT_C 480
 #define WIDTH_C 640
 #define DEPTH 2 // 2 bytes
