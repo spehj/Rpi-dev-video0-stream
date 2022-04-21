@@ -23,6 +23,8 @@ Here we are making
 
 int main(int argc, char *argv[])
 {
+	system("v4l2-ctl --set-fmt-video=width=640,height=480,pixelformat=2");
+	sleep(1);
     char *pom;
     int fi, fo;
     ssize_t n_pod, p_pod;

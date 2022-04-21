@@ -15,7 +15,8 @@
 #define DEPTH_E 2 // screen depth
 
 int main(int argc, char *argv[])
-{
+{   system("v4l2-ctl --set-fmt-video=width=640,height=480,pixelformat=2");
+    sleep(1);
     char *pom; // image from /dev/video0
     char *mid_pom;
     unsigned short *screen_img; // Image on the screen
