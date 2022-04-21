@@ -10,8 +10,8 @@
 #define HEIGHT_C 480
 #define WIDTH_C 640
 #define DEPTH_C 3
-#define HEIGHT_E 1080
-#define WIDTH_E 1920
+#define HEIGHT_E 1024
+#define WIDTH_E 1280
 #define DEPTH_E 2 // screen depth
 
 int main(int argc, char *argv[])
