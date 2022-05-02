@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
             printf("%s: Error write %s\n", argv[0], argv[2]);
             exit(5);
         }
-        sleep(0.4);
+        sleep(1);
     }
     /* END stream */
 

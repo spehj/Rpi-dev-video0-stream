@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
             printf("%s: Napaka write %s\n", argv[0], argv[2]);
             exit(5);
         }
-        sleep(0.5);
+        sleep(1);
     }
 
     return 0;
